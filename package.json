@@ -1,0 +1,10 @@
+{
+  "name": "zk-credit-score",
+  "version": "0.1.0",
+  "private": true,
+  "license": "MIT",
+  "description": "A protocol proving credit-score eligibility with Zero-Knowledge Proofs, without revealing the exact score.",
+  "scripts": {
+    "circuit:test": "npm --prefix circuits test"
+  }
+}
