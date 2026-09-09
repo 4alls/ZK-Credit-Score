@@ -5,7 +5,12 @@
   "description": "Circom circuits for the ZK Credit Score protocol",
   "license": "MIT",
   "scripts": {
-    "test": "mocha test --timeout 100000"
+    "test": "mocha test --timeout 100000",
+    "circuit:compile": "mkdir -p build && circom src/creditScoreThreshold.circom --r1cs --wasm --sym -o build -l node_modules",
+    "circuit:setup": "bash scripts/setup.sh",
+    "circuit:prove": "bash scripts/prove.sh",
+    "circuit:verify": "bash scripts/verify.sh",
+    "circuit:export-verifier": "snarkjs zkey export solidityverifier build/creditScoreThreshold_final.zkey ../contracts/src/verifiers/CreditScoreVerifier.sol"
   },
   "dependencies": {
     "circomlib": "^2.0.5"
@@ -13,6 +18,7 @@
   "devDependencies": {
     "chai": "^4.3.10",
     "circom_tester": "^0.0.20",
-    "mocha": "^10.2.0"
+    "mocha": "^10.2.0",
+    "snarkjs": "^0.7.4"
   }
 }
