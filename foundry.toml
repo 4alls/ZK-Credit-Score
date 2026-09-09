@@ -1,0 +1,9 @@
+[profile.default]
+src = "contracts/src"
+test = "contracts/test"
+script = "contracts/script"
+out = "out"
+libs = ["contracts/lib"]
+
+[fmt]
+line_length = 100

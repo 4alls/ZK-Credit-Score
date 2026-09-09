@@ -25,6 +25,14 @@ template CreditScoreThreshold() {
 
     signal input creditScore;   // private
     signal input minimumScore;  // public
+    // Binds this proof to a specific Ethereum address. It is not used in any
+    // eligibility computation below -- its only purpose is to appear as a
+    // public signal, so it becomes part of Groth16's public-input commitment.
+    // A verifier that requires publicSignals.userAddress == msg.sender can
+    // then reject a proof copied from someone else's transaction (see
+    // ZKCreditRegistry.sol), because tampering with a public signal breaks
+    // the pairing check even when the rest of the proof is untouched.
+    signal input userAddress;   // public
     signal output isEligible;   // public
 
     // --- Step 1: bind both operands to BITS bits before comparing them. ---
@@ -65,6 +73,11 @@ template CreditScoreThreshold() {
     // prover cannot generate a valid proof at all, rather than generating
     // one that a verifier must additionally check for isEligible == 1.
     isEligible === 1;
+
+    // Pin userAddress into the R1CS with a genuine (if trivial) constraint,
+    // rather than leaving it a bare unused public input.
+    signal userAddressSquare;
+    userAddressSquare <== userAddress * userAddress;
 }
 
-component main { public [minimumScore] } = CreditScoreThreshold();
+component main { public [minimumScore, userAddress] } = CreditScoreThreshold();

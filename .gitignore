@@ -6,3 +6,4 @@ circuits/build/
 out/
 cache/
 broadcast/
+contracts/lib/

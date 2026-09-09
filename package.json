@@ -9,6 +9,9 @@
     "circuit:compile": "npm --prefix circuits run circuit:compile",
     "circuit:setup": "npm --prefix circuits run circuit:setup",
     "circuit:prove": "npm --prefix circuits run circuit:prove",
-    "circuit:verify": "npm --prefix circuits run circuit:verify"
+    "circuit:verify": "npm --prefix circuits run circuit:verify",
+    "contracts:build": "forge build",
+    "contracts:test": "forge test",
+    "test": "npm run circuit:test && npm run contracts:test"
   }
 }
