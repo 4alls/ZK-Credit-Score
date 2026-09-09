@@ -3,6 +3,8 @@
 A minimal protocol proving credit-score eligibility with a Zero-Knowledge Proof,
 without ever revealing the exact score.
 
+[![CI](https://github.com/4alls/ZK-Credit-Score/actions/workflows/ci.yml/badge.svg)](https://github.com/4alls/ZK-Credit-Score/actions/workflows/ci.yml)
+
 > Status: work in progress / portfolio project. Not audited, not production-ready.
 
 ## The problem
@@ -160,6 +162,27 @@ safety checks a real integration needs:
   was actually proven, read from the verified signal itself).
 - `isEligible(user, threshold)` — a view function a downstream contract
   (e.g. a lending protocol) would call to gate on eligibility.
+
+## CI
+
+[`.github/workflows/ci.yml`](.github/workflows/ci.yml) runs on every push to
+`main` and every pull request, as two independent jobs:
+
+- **`circuits`** — installs `circom`, then runs the full pipeline from
+  scratch: compile, witness-level tests, trusted setup, prove, verify. This
+  catches circuit regressions that unit tests alone might miss (e.g. a
+  change that compiles and passes witness tests but breaks the exported
+  Solidity verifier's public-signal layout).
+- **`contracts`** — `forge fmt --check`, `forge build`, `forge test`.
+
+The two jobs don't depend on each other: `contracts` tests against the
+*committed* `CreditScoreVerifier.sol` and a proof fixture baked into the test
+file (see `contracts/test/ZKCreditRegistry.t.sol`), not against whatever the
+`circuits` job just regenerated — the trusted setup produces different key
+material on every run (see "Security notes" below), so there is nothing
+byte-for-byte stable to compare across jobs anyway. This keeps `forge test`
+fast and dependency-free, and matches how a contributor who only touches
+`contracts/` would actually work.
 
 ## Security notes
 
