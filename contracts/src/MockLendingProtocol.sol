@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: MIT
+
 pragma solidity ^0.8.20;
 
 import {IZKCreditRegistry} from "./interfaces/IZKCreditRegistry.sol";
@@ -10,12 +11,13 @@ import {IZKCreditRegistry} from "./interfaces/IZKCreditRegistry.sol";
 ///         typical over-collateralized DeFi lending, and is the whole point
 ///         of proving a credit score in the first place.
 ///
-/// @dev Deliberately minimal -- this is a demo of the ZK integration, not a
+/// @dev Deliberately minimal: this is a demo of the ZK integration, not a
 ///      production lending protocol. In particular it has no interest, no
 ///      liquidation, and a single flat borrow limit for every eligible
 ///      address. See README > Security notes for what a real protocol would
 ///      still need on top of this (issuer-signed credentials, expiring
 ///      eligibility, tiered limits, etc).
+
 contract MockLendingProtocol {
     IZKCreditRegistry public immutable registry;
 

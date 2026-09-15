@@ -1,11 +1,12 @@
 // SPDX-License-Identifier: MIT
+
 pragma solidity ^0.8.20;
 
 import {IGroth16Verifier} from "./interfaces/IGroth16Verifier.sol";
 
 /// @title ZKCreditRegistry
 /// @notice Lets a user prove, with a Groth16 proof, that their private
-///         credit score meets a public threshold -- without revealing the
+///         credit score meets a public threshold without revealing the
 ///         score. Records the highest threshold each address has proven.
 ///
 /// @dev Public signals produced by CreditScoreThreshold.circom, in order:
@@ -23,6 +24,7 @@ import {IGroth16Verifier} from "./interfaces/IGroth16Verifier.sol";
 ///          the verified public signal, never from a separate, untrusted
 ///          function argument.
 ///        - no admin backdoor: the verifier address is immutable.
+
 contract ZKCreditRegistry {
     /// @notice The Groth16 verifier for the CreditScoreThreshold circuit.
     /// @dev Immutable: nobody, including this contract's deployer, can swap
