@@ -95,6 +95,19 @@ contract ZKCreditRegistryTest is Test {
         registry.proveEligibility(pA, pB, pC, tampered);
     }
 
+    /// Same defense applies to isEligible itself: a caller cannot flip a
+    /// proof's public "eligible" output without invalidating the proof,
+    /// even though the contract never checks pubSignals[0] directly -- it
+    /// relies entirely on Groth16 soundness for this signal, exactly as it
+    /// does for minimumScore and userAddress above.
+    function test_TamperedIsEligibleSignal_RevertsAsInvalidProof() public {
+        uint256[3] memory tampered = [uint256(0), uint256(700), uint256(1)];
+
+        vm.prank(ALICE);
+        vm.expectRevert(ZKCreditRegistry.InvalidProof.selector);
+        registry.proveEligibility(pA, pB, pC, tampered);
+    }
+
     function test_SameProof_CannotBeSubmittedTwice() public {
         vm.prank(ALICE);
         registry.proveEligibility(pA, pB, pC, pubSignals);
@@ -115,5 +128,15 @@ contract ZKCreditRegistryTest is Test {
     function test_UnprovenAddress_IsNotEligible() public view {
         assertFalse(registry.isEligible(MALLORY, 300));
         assertEq(registry.provenThreshold(MALLORY), 0);
+    }
+
+    /// isEligible must agree with a plain >= comparison against the proven
+    /// threshold for every possible query threshold, not just the few
+    /// values exercised above.
+    function testFuzz_IsEligible_MatchesProvenThreshold(uint256 threshold) public {
+        vm.prank(ALICE);
+        registry.proveEligibility(pA, pB, pC, pubSignals);
+
+        assertEq(registry.isEligible(ALICE, threshold), threshold <= 700);
     }
 }
